@@ -243,11 +243,18 @@ export default function DriverDashboard() {
   };
 
   useEffect(() => {
-    if (session?.user?._id) {
-      fetchRides();
-    }
-  }, [session]);
+   if (!session?.user?._id) return;
 
+   fetchRides();
+
+   const interval = setInterval(() => {
+     fetchRides();
+   }, 5000);
+
+   return () => clearInterval(interval);
+
+  }, [session]);
+  
   const acceptRide = async (ride: Ride) => {
     try {
       await fetch("/api/drivers/accept-ride", {
