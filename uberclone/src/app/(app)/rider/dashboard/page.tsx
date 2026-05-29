@@ -440,7 +440,11 @@ export default function RiderDashboard() {
 
       if (!driver) return;
 
-      setActiveDriver(driver);
+      setActiveDriver((prev: any) => ({
+        ...prev,
+        ...driver,
+        currentLocation: driver.currentLocation,
+      }));
       setRideStatus(data.status);
 
       const target =
