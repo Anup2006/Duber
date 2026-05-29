@@ -9,9 +9,12 @@ export interface Driver extends Document {
 
   carType: string;
 
-  licenseNumber: string;
+  ratingAvg: number;
+  ratingCount: number;
+  ratingSum: number;
+  totalTrips: number;
 
-  rating: number;
+  licenseNumber: string;
 
   isAvailable: boolean;
 
@@ -52,9 +55,24 @@ const DriverSchema: Schema<Driver> = new Schema(
       unique: true,
     },
 
-    rating: {
+    ratingAvg: {
       type: Number,
       default: 5,
+    },
+
+    ratingCount: {
+      type: Number,
+      default: 0,
+    },
+
+    ratingSum: {
+      type: Number,
+      default: 0,
+    },
+
+    totalTrips: {
+      type: Number,
+      default: 0,
     },
 
     isAvailable: {

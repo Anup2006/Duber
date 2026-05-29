@@ -89,13 +89,13 @@ const Page = () => {
 
         <CardContent>
           <Button
-  type="button"
-  className="w-full mt-3 mb-2"
-  onClick={handleGoogleLogin}
-  disabled={isSubmitting}
->
-  Continue with Google
-</Button>
+            type="button"
+            className="w-full mt-3 mb-2"
+            onClick={handleGoogleLogin}
+            disabled={isSubmitting}
+          >
+            Continue with Google
+          </Button>
           <form
             onSubmit={(e) => {
               e.preventDefault();

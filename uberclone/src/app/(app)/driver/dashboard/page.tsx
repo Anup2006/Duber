@@ -4,10 +4,20 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import MapView from "@/components/MapView";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Card,
   CardContent,
 } from "@/components/ui/card";
+import {
+  Navigation,
+  Shield,
+  Car,
+  Loader2,
+  Star,
+  Clock3,
+  Phone,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import { getSocket } from "@/lib/socketClient";
@@ -49,6 +59,12 @@ export default function DriverDashboard() {
   const ridesRef = useRef<Ride[]>([]);
   const [completedRideId, setCompletedRideId] = useState<string | null>(null);
   const [enteredOtp, setEnteredOtp] =useState("");
+  const SHEET_COLLAPSED = 180;
+  const SHEET_MID = 420;
+  const SHEET_EXPANDED = 650;  
+  const [sheetHeight, setSheetHeight] = useState(SHEET_COLLAPSED);
+  const [loadingAction, setLoadingAction] = useState<string | null>(null);
+
   useEffect(() => {
     ridesRef.current = rides;
   }, [rides]);
@@ -560,162 +576,285 @@ export default function DriverDashboard() {
   }, [rides, completedRideId]);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <Navbar/>
-      <div className="max-w-3xl mx-auto">
+  <div className="h-screen w-full relative overflow-hidden bg-black">
 
-        <h1 className="text-2xl font-bold mb-6">
-          Driver Dashboard
-        </h1>
+    {/* MAP */}
+    <div className="absolute inset-0 z-0 pointer-events-auto">
+      <MapView
+        pickup={pickupCoords}
+        drop={dropCoords}
+        route={rideStatus === "completed" ? [] : route}
+        drivers={
+          driverCoords
+            ? [
+                {
+                  currentLocation: {
+                    lat: driverCoords[0],
+                    lng: driverCoords[1],
+                  },
+                },
+              ]
+            : []
+        }
+        rideStatus={rideStatus}
+      />
+    </div>
 
+    {/* DARK OVERLAY */}
+    <div className="absolute inset-0 bg-black/10 z-10 pointer-events-none" />
+
+    {/* NAVBAR */}
+    <div className="absolute top-0 left-0 right-0 z-40">
+      <Navbar />
+    </div>
+
+    {/* FLOATING ACTIONS */}
+    <div className="absolute right-4 top-24 z-40 flex flex-col gap-3">
+
+      <button className="h-12 w-12 rounded-full bg-white shadow-xl flex items-center justify-center">
+        <Navigation className="h-5 w-5" />
+      </button>
+
+      <button className="h-12 w-12 rounded-full bg-red-500 text-white shadow-xl flex items-center justify-center">
+        <Shield className="h-5 w-5" />
+      </button>
+
+    </div>
+
+    {/* BOTTOM SHEET */}
+    <motion.div
+      style={{ height: sheetHeight }}
+      drag="y"
+      dragConstraints={{ top: 0, bottom: 0 }}
+      onDragEnd={(event, info) => {
+        const dragDistance = info.offset.y;
+
+        if (dragDistance < -80) {
+          if (sheetHeight === SHEET_COLLAPSED) {
+            setSheetHeight(SHEET_MID);
+          } else {
+            setSheetHeight(SHEET_EXPANDED);
+          }
+        } else if (dragDistance > 80) {
+          if (sheetHeight === SHEET_EXPANDED) {
+            setSheetHeight(SHEET_MID);
+          } else {
+            setSheetHeight(SHEET_COLLAPSED);
+          }
+        }
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 120,
+        damping: 20,
+      }}
+      className="
+        absolute
+        bottom-0
+        left-0
+        right-0
+        z-50
+        rounded-t-[32px]
+        bg-white/95
+        backdrop-blur-xl
+        shadow-2xl
+        border-t
+        overflow-y-auto
+      "
+    >
+
+      {/* HANDLE */}
+      <div className="flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing">
+        <div className="h-1.5 w-14 rounded-full bg-gray-300" />
+      </div>
+
+      <div className="p-5 md:p-6 space-y-5">
+
+        {/* HEADER */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Driver Dashboard</h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Manage ride requests in real-time
+            </p>
+          </div>
+
+          <div className="h-14 w-14 rounded-2xl bg-black text-white flex items-center justify-center">
+            <Car className="h-7 w-7" />
+          </div>
+        </div>
+
+        {/* RIDES LIST */}
         <div className="space-y-4">
 
           {rides.map((ride) => (
-            <Card key={ride._id}>
+            <motion.div
+              key={ride._id}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="
+                rounded-3xl
+                bg-white
+                border
+                shadow-lg
+                p-5
+              "
+            >
 
-              <CardContent className="p-4 space-y-3">
+              {/* TOP */}
+              <div className="flex items-center justify-between">
 
                 <div>
-                  <p className="font-medium">
-                    Ride Request
-                  </p>
+                  <p className="font-semibold">Ride Request</p>
 
                   <p
-                    className={`text-sm font-medium ${
-                      ride.status === "accepted"
-                        ? "text-green-600"
-                        : "text-yellow-600"
-                    }`}
+                    className={`
+                      text-sm font-semibold mt-1
+                      ${
+                        ride.status === "accepted"
+                          ? "text-green-600"
+                          : ride.status === "completed"
+                          ? "text-blue-600"
+                          : "text-yellow-600"
+                      }
+                    `}
                   >
-                    Status: {ride.status}
+                    ● {ride.status.toUpperCase()}
                   </p>
                 </div>
 
-                <div className="text-sm">
-                  <p>
-                    Pickup:
-                    {" "}
-                    {ride.pickup.address}
-                  </p>
-
-                  <p>
-                    Drop:
-                    {" "}
-                    {ride.drop.address}
-                  </p>
+                <div className="text-right">
+                  <p className="text-xs text-gray-500">Fare</p>
+                  <p className="text-xl font-bold">₹ {ride.fare}</p>
                 </div>
 
-                <div className="font-semibold">
-                  ₹ {ride.distanceKm.toFixed(2)}
-                </div>
+              </div>
 
-                <div className="font-semibold">
-                  ₹ {ride.fare}
-                </div>
+              {/* LOCATION */}
+              <div className="mt-3 text-sm text-gray-600 space-y-1">
+                <p>Pickup: {ride.pickup.address}</p>
+                <p>Drop: {ride.drop.address}</p>
+              </div>
 
-                <div className="flex gap-3">
+              {/* DISTANCE */}
+              <div className="mt-2 text-sm font-semibold">
+                {ride.distanceKm.toFixed(2)} km
+              </div>
 
-                  <div className="flex gap-2 flex-wrap">
-                    {ride.status === "searching" && (
-                      <Button onClick={() => acceptRide(ride)}>
-                        Accept
-                      </Button>
-                    )}
+              {/* OTP (ARRIVING) */}
+              {ride.status === "arriving" && (
+                <div className="mt-4 space-y-2">
 
-                    {ride.status === "accepted" && (
-                      <Button onClick={() => updateRideStatus(ride._id, "arriving")}>
-                        Arriving to Pickup
-                      </Button>
-                    )}
-
-                    {/* {ride.status === "arriving" && (
-                      <Button onClick={() => updateRideStatus(ride._id, "started")}>
-                        Start Ride
-                      </Button>
-                    )} */}
-
-                    {ride.status === "arriving" && (
-                      <div className="space-y-2">
-
-                        <input
-                          type="text"
-                          placeholder="Enter Rider OTP"
-                          value={enteredOtp}
-                          onChange={(e) =>
-                            setEnteredOtp(e.target.value)
-                          }
-                          className="
-                            border
-                            rounded
-                            px-3
-                            py-2
-                            w-full
-                          "
-                        />
-
-                        <Button
-                          onClick={() =>
-                            verifyOtp(
-                              ride._id,
-                              enteredOtp
-                            )
-                          }
-                        >
-                          Verify OTP & Start Ride
-                        </Button>
-
-                      </div>
-                      )}
-
-                    {ride.status === "started" && (
-                      <Button onClick={() => updateRideStatus(ride._id, "completed")}>
-                        Complete Ride
-                      </Button>
-                    )}
-
-                  </div>
+                  <input
+                    type="text"
+                    placeholder="Enter Rider OTP"
+                    value={enteredOtp}
+                    onChange={(e) => setEnteredOtp(e.target.value)}
+                    className="
+                      w-full
+                      border
+                      rounded-2xl
+                      px-3
+                      py-2
+                    "
+                  />
 
                   <Button
-                    variant="destructive"
-                    onClick={() => rejectRide(ride._id)}
+                    className="w-full"
+                    disabled={loadingAction === `verify-${ride._id}`}
+                    onClick={async () => {
+                      setLoadingAction(`verify-${ride._id}`);
+                      try {
+                        await verifyOtp(ride._id, enteredOtp);
+                      } finally {
+                        setLoadingAction(null);
+                      }
+                    }}
                   >
-                    Reject
+                    {loadingAction === `verify-${ride._id}` ? "Verifying..." : "Verify OTP & Start Ride"}
                   </Button>
 
                 </div>
+              )}
 
-              </CardContent>
+              {/* ACTIONS */}
+              <div className="flex gap-2 mt-4 flex-wrap">
 
-            </Card>
+                {ride.status === "searching" && (
+                  <Button
+                    disabled={loadingAction === `accept-${ride._id}`}
+                    onClick={async () => {
+                      setLoadingAction(`accept-${ride._id}`);
+                      try {
+                        await acceptRide(ride);
+                      } finally {
+                        setLoadingAction(null);
+                      }
+                    }}
+                  >
+                    {loadingAction === `accept-${ride._id}` ? "Accepting..." : "Accept"}
+                  </Button>
+                )}
+
+                {ride.status === "accepted" && (
+                  <Button
+                    disabled={loadingAction === `arriving-${ride._id}`}
+                    onClick={async () => {
+                      setLoadingAction(`arriving-${ride._id}`);
+                      try {
+                        await updateRideStatus(ride._id, "arriving");
+                      } finally {
+                        setLoadingAction(null);
+                      }
+                    }}
+                  >
+                    {loadingAction === `arriving-${ride._id}` ? "Updating..." : "Arriving"}
+                  </Button>
+                )}
+
+                {ride.status === "started" && (
+                  <Button
+                    disabled={loadingAction === `complete-${ride._id}`}
+                    onClick={async () => {
+                      setLoadingAction(`complete-${ride._id}`);
+                      try {
+                        await updateRideStatus(ride._id, "completed");
+                      } finally {
+                        setLoadingAction(null);
+                      }
+                    }}
+                  >
+                    {loadingAction === `complete-${ride._id}` ? "Completing..." : "Complete"}
+                  </Button>
+                )}
+
+                {ride.status !== "started" && (
+                <Button
+                  variant="destructive"
+                  disabled={loadingAction === `reject-${ride._id}`}
+                  onClick={async () => {
+                    setLoadingAction(`reject-${ride._id}`);
+                    try {
+                      await rejectRide(ride._id);
+                    } finally {
+                      setLoadingAction(null);
+                    }
+                  }}
+                >
+                  {loadingAction === `reject-${ride._id}` ? "Rejecting..." : "Reject"}
+                </Button>
+                )}
+
+              </div>
+
+            </motion.div>
           ))}
 
         </div>
-        <div className="mt-6">
-          <MapView
-            pickup={pickupCoords}
-            drop={dropCoords}
-            route={route}
-            drivers={
-              driverCoords
-                ? [
-                    {
-                      currentLocation: {
-                        lat:
-                          driverCoords[0],
 
-                        lng:
-                          driverCoords[1],
-                      },
-                    },
-                  ]
-                : []
-            }
-            rideStatus={rideStatus}
-          />
-
-        </div>
       </div>
+    </motion.div>
 
-    </div>
-  );
+  </div>
+);
 }

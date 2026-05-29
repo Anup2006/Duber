@@ -22,7 +22,13 @@ export async function GET(
     const ride =
       await RideModel.findById(
         rideId
-      ).populate("driverId");
+      ).populate({
+        path: "driverId",
+        populate: {
+          path: "userId",
+          select: "name phone",
+        },
+      })
 
     if (
       !ride ||
