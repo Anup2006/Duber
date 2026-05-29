@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 
       carType: driver.carType,
 
-      rating: driver.rating,
+      rating: driver.ratingAvg,
 
       currentLocation: {
         lat: driver.currentLocation?.lat,
