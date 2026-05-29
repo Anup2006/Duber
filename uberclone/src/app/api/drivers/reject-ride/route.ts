@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 
     // 3. Emit via SOCKET SERVER (NOT globalThis)
     try {
-      await fetch("${process.env.NEXT_PUBLIC_SOCKET_URL}/emit-ride-status", {
+      await fetch(`${process.env.NEXT_PUBLIC_SOCKET_URL}/emit-ride-status`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

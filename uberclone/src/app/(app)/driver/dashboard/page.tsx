@@ -236,7 +236,11 @@ export default function DriverDashboard() {
 
       const data = await res.json();
 
-      setRides(data);
+      const filtered = data.filter(
+        (ride: Ride) => ride.status !== "completed"
+      );
+
+      setRides(filtered);
     } catch (error) {
       console.log(error);
     }
@@ -533,7 +537,12 @@ export default function DriverDashboard() {
         ride.status === "started"
     );
 
-    if (!activeRide) return;
+    if (!activeRide) {
+      setRoute([]);
+      setPickupCoords(undefined);
+      setDropCoords(undefined);
+      return;
+    }
 
     // 🚨 HARD BLOCK COMPLETED RIDE RESTORE
     if (completedRideId && activeRide._id === completedRideId) return;

@@ -11,7 +11,12 @@ const httpServer = createServer(app);
 // Socket.IO setup
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: [
+      "http://localhost:3000",
+      process.env.CLIENT_URL,
+    ],
+    methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
