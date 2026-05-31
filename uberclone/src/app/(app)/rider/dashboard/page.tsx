@@ -846,17 +846,27 @@ export default function RiderDashboard() {
         backdrop-blur-xl
         shadow-2xl
         border-t
-        overflow-y-auto
+        flex
+        flex-col
       "
     >
-
       <div
         className="flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing"
       >
         <div className="h-1.5 w-14 rounded-full bg-gray-300" ></div>
       </div>
 
+        <div
+          className="
+            flex-1
+            overflow-y-auto
+            overscroll-contain
+            p-5 md:p-6
+            space-y-5
+          "
+        >
       <div className="p-5 md:p-6 space-y-5">
+
 
         {/* OTP */}
         {rideStatus === "arriving" && rideOtp && (
@@ -1404,6 +1414,7 @@ export default function RiderDashboard() {
         </motion.div>
       )}
 
+    </div>
     </div>
 
   </motion.div>
