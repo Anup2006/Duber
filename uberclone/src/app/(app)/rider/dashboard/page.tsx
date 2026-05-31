@@ -50,6 +50,7 @@ export default function RiderDashboard() {
   const [rideOtp, setRideOtp] =useState("");
   const [sheetHeight, setSheetHeight] = useState(SHEET_COLLAPSED);
   const [showRating, setShowRating] = useState(false);
+  const [ratingDriverId, setRatingDriverId] = useState<string | null>(null);
 
   const resetRide = () => {
     if (rideId) {
@@ -580,6 +581,7 @@ export default function RiderDashboard() {
       if (data.status === "completed") {
         alert("Completed the Ride");
         setRideStatus("completed");
+        setRatingDriverId(activeDriver?.userId?._id);
         setShowRating(true);
 
         setTimeout(() => {
@@ -655,6 +657,7 @@ export default function RiderDashboard() {
 
         // COMPLETED
         if (ride.status === "completed") {
+          setRatingDriverId(activeDriver?.userId?._id);
           setTimeout(() => {
             resetRide();
           }, 7000);
