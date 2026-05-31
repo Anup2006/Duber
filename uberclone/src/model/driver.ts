@@ -13,6 +13,9 @@ export interface Driver extends Document {
   ratingCount: number;
   ratingSum: number;
   totalTrips: number;
+  completedTrips:number;
+  rejectedTrips: number;
+  totalEarnings: number;
 
   licenseNumber: string;
 
@@ -71,6 +74,21 @@ const DriverSchema: Schema<Driver> = new Schema(
     },
 
     totalTrips: {
+      type: Number,
+      default: 0,
+    },
+
+    completedTrips: {
+      type: Number,
+      default: 0,
+    },
+
+    rejectedTrips: {
+      type: Number,
+      default: 0,
+    },
+
+    totalEarnings: {
       type: Number,
       default: 0,
     },

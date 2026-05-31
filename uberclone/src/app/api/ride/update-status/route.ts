@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import RideModel from "@/model/Ride";
+import DriverModel from "@/model/driver";
 
 export async function POST(req: NextRequest) {
   try {
@@ -40,6 +41,12 @@ export async function POST(req: NextRequest) {
         (1000 + Math.floor(Math.random() * 9000)).toString();
     }
 
+    if (status === "completed") {
+      updateData.completedAt =
+      new Date();
+    }
+
+
     // 1. UPDATE DB FIRST
     const ride = await RideModel.findByIdAndUpdate(
       rideId,
@@ -53,6 +60,20 @@ export async function POST(req: NextRequest) {
         { status: 404 }
       );
     }
+
+    if (status === "completed" && ride.driverId) {
+      await DriverModel.findByIdAndUpdate(
+        ride.driverId,
+        {
+          $inc: {
+            completedTrips: 1,
+            totalEarnings: ride.fare,
+          },
+        }
+      );
+    }
+
+ 
 
     // 2. SOCKET EMIT VIA SOCKET SERVER (same as reject flow)
     try {

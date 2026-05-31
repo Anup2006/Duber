@@ -686,65 +686,93 @@ export default function DriverDashboard() {
 
         {/* RIDES LIST */}
         <div className="space-y-4">
-
           {rides.map((ride) => (
             <motion.div
               key={ride._id}
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.25 }}
               className="
+                relative
                 rounded-3xl
-                bg-white
+                bg-gradient-to-br from-white to-gray-50
                 border
-                shadow-lg
+                shadow-md
+                hover:shadow-xl
                 p-5
+                overflow-hidden
               "
             >
+              {/* subtle glow background */}
+              <div className="absolute inset-0 opacity-30 pointer-events-none bg-gradient-to-r from-gray-100 to-transparent" />
 
-              {/* TOP */}
-              <div className="flex items-center justify-between">
-
+              {/* HEADER */}
+              <div className="flex items-start justify-between relative">
                 <div>
-                  <p className="font-semibold">Ride Request</p>
+                  <p className="font-semibold text-gray-900">
+                    Ride Request
+                  </p>
 
-                  <p
+                  <motion.span
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
                     className={`
-                      text-sm font-semibold mt-1
+                      inline-flex items-center mt-2 px-3 py-1 rounded-full text-xs font-semibold
                       ${
                         ride.status === "accepted"
-                          ? "text-green-600"
+                          ? "bg-green-100 text-green-700"
+                          : ride.status === "started"
+                          ? "bg-blue-100 text-blue-700"
                           : ride.status === "completed"
-                          ? "text-blue-600"
-                          : "text-yellow-600"
+                          ? "bg-gray-200 text-gray-700"
+                          : "bg-yellow-100 text-yellow-700"
                       }
                     `}
                   >
                     ● {ride.status.toUpperCase()}
-                  </p>
+                  </motion.span>
                 </div>
 
                 <div className="text-right">
                   <p className="text-xs text-gray-500">Fare</p>
-                  <p className="text-xl font-bold">₹ {ride.fare}</p>
+                  <motion.p
+                    key={ride.fare}
+                    initial={{ scale: 1.2 }}
+                    animate={{ scale: 1 }}
+                    className="text-2xl font-bold text-gray-900"
+                  >
+                    ₹ {ride.fare}
+                  </motion.p>
                 </div>
-
               </div>
 
               {/* LOCATION */}
-              <div className="mt-3 text-sm text-gray-600 space-y-1">
-                <p>Pickup: {ride.pickup.address}</p>
-                <p>Drop: {ride.drop.address}</p>
+              <div className="mt-4 space-y-2 text-sm text-gray-600">
+                <div className="flex items-start gap-2">
+                  <span className="w-2 h-2 mt-1 rounded-full bg-green-500" />
+                  <span>{ride.pickup.address}</span>
+                </div>
+
+                <div className="flex items-start gap-2">
+                  <span className="w-2 h-2 mt-1 rounded-full bg-red-500" />
+                  <span>{ride.drop.address}</span>
+                </div>
               </div>
 
               {/* DISTANCE */}
-              <div className="mt-2 text-sm font-semibold">
-                {ride.distanceKm.toFixed(2)} km
+              <div className="mt-3 text-sm font-medium text-gray-800">
+                🚗 {ride.distanceKm.toFixed(2)} km
               </div>
 
-              {/* OTP (ARRIVING) */}
+              {/* OTP SECTION */}
               {ride.status === "arriving" && (
-                <div className="mt-4 space-y-2">
-
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 space-y-2"
+                >
                   <input
                     type="text"
                     placeholder="Enter Rider OTP"
@@ -754,8 +782,9 @@ export default function DriverDashboard() {
                       w-full
                       border
                       rounded-2xl
-                      px-3
-                      py-2
+                      px-3 py-2
+                      outline-none
+                      focus:ring-2 focus:ring-black/20
                     "
                   />
 
@@ -773,13 +802,11 @@ export default function DriverDashboard() {
                   >
                     {loadingAction === `verify-${ride._id}` ? "Verifying..." : "Verify OTP & Start Ride"}
                   </Button>
-
-                </div>
+                </motion.div>
               )}
 
               {/* ACTIONS */}
-              <div className="flex gap-2 mt-4 flex-wrap">
-
+              <div className="flex gap-2 mt-4 flex-wrap relative">
                 {ride.status === "searching" && (
                   <Button
                     disabled={loadingAction === `accept-${ride._id}`}
@@ -844,9 +871,7 @@ export default function DriverDashboard() {
                   {loadingAction === `reject-${ride._id}` ? "Rejecting..." : "Reject"}
                 </Button>
                 )}
-
               </div>
-
             </motion.div>
           ))}
 
@@ -858,3 +883,5 @@ export default function DriverDashboard() {
   </div>
 );
 }
+
+      

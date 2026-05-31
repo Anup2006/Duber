@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import RideModel, { RideStatus } from "@/model/Ride";
+import DriverModel from "@/model/driver";
 
 export async function POST(req: Request) {
   try {
@@ -33,6 +34,15 @@ export async function POST(req: Request) {
         $unset: { driverId: "" },
       },
       { new: true }
+    );
+
+    await DriverModel.findByIdAndUpdate(
+      existingRide.driverId,
+      {
+        $inc: {
+          rejectedTrips: 1,
+        },
+      }
     );
 
     // 3. Emit via SOCKET SERVER (NOT globalThis)
