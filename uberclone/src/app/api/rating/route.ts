@@ -11,18 +11,26 @@ export async function POST(req: Request) {
 
     const { rideId, driverId, riderId, rating, comment } = body;
 
-    if (!rideId || !driverId || !riderId || !rating) {
-      return NextResponse.json(
-        { error: "Missing fields" },
-        { status: 400 }
-      );
-    }
     console.log({
   rideId,
   driverId,
   riderId,
   rating,
 });
+    
+    if (!rideId || !driverId || !riderId || !rating) {
+      console.log("MISSING FIELD", {
+    rideId,
+    driverId,
+    riderId,
+    rating,
+  });
+      return NextResponse.json(
+        { error: "Missing fields" },
+        { status: 400 }
+      );
+    }
+    
 
     // 1. prevent duplicate rating
     const existing = await RatingModel.findOne({ rideId });
