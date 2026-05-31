@@ -1426,7 +1426,7 @@ export default function RiderDashboard() {
     open={showRating}
     onClose={() => setShowRating(false)}
     rideId={rideId}
-    driverId={activeDriver?.driverId?._id || activeDriver?.userId?._id}
+    driverId={ratingDriverId}
     riderId={session?.user?._id}
   />
   </div>
