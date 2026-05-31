@@ -69,6 +69,7 @@ export default function RiderDashboard() {
     joinedRideRef.current = null;
     setDropCoords(undefined);
     setRejectedDrivers([]);
+    setShowRating(false);
   };
 
   useEffect(() => {
