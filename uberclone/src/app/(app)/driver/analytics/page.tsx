@@ -106,7 +106,7 @@ export default function DriverAnalyticsPage() {
             },
             {
               label: "Cancelled",
-              value: analytics.cancelledTrips || 0,
+              value: analytics.rejectedTrips || 0,
             },
             {
               label: "Rating",

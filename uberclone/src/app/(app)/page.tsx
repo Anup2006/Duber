@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden flex flex-col">
+    <div className="min-h-screen bg-black text-white relative overflow-x-hidden flex flex-col scroll-smooth">
 
       {/* BACKGROUND */}
       <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] [background-size:40px_40px]" />
@@ -35,7 +35,7 @@ export default function Home() {
       </header>
 
       {/* HERO */}
-      <section className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center px-6 md:px-8 pt-6 md:pt-12 max-w-6xl mx-auto flex-1">
+      <section className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center px-6 md:px-8 pt-6 md:pt-12 max-w-6xl mx-auto">
 
         {/* LEFT */}
         <motion.div

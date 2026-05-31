@@ -583,7 +583,7 @@ export default function RiderDashboard() {
 
         setTimeout(() => {
           resetRide();
-        }, 5000);
+        }, 7000);
 
         return;
       }
@@ -656,7 +656,7 @@ export default function RiderDashboard() {
         if (ride.status === "completed") {
           setTimeout(() => {
             resetRide();
-          }, 5000);
+          }, 7000);
           return;
         }
 

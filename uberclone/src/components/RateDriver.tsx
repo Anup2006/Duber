@@ -42,7 +42,7 @@ export default function RateDriver({
 
         setTimeout(() => {
         handleClose();
-        }, 1200);
+        }, 7000);
     }
     };
   
@@ -51,9 +51,7 @@ export default function RateDriver({
     setSuccess(false);
     onClose();
     };
-    console.log("sd",rideId,
-  driverId,
-  riderId)
+
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
         <button

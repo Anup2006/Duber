@@ -103,7 +103,15 @@ export async function GET(
     rides.forEach((ride: any) => {
       if (!ride.completedAt) return;
 
-      const hour = new Date(ride.completedAt).getHours();
+      const date = new Date(ride.completedAt);
+
+      const hour = Number(
+        new Intl.DateTimeFormat("en-IN", {
+          hour: "2-digit",
+          hour12: false,
+          timeZone: "Asia/Kolkata",
+        }).format(date)
+      );
 
       hourMap.set(hour, (hourMap.get(hour) || 0) + 1);
     });
@@ -124,7 +132,7 @@ export async function GET(
     // ================= RESPONSE =================
     return NextResponse.json({
       completedTrips: driver.completedTrips || 0,
-      cancelledTrips: driver.rejectedTrips || 0,
+      rejectedTrips: driver.rejectedTrips || 0,
       totalEarnings,
       averageRating: driver.ratingAvg || 5,
       totalReviews: ratings.length,

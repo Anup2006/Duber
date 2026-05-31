@@ -128,3 +128,11 @@
   }
 }
 
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+body {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
