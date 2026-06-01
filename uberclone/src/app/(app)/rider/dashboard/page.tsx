@@ -581,7 +581,12 @@ export default function RiderDashboard() {
       if (data.status === "completed") {
         alert("Completed the Ride");
         setRideStatus("completed");
-        setRatingDriverId(activeDriver?.userId?._id);
+        const driverId =
+        activeDriver?.userId?._id ||
+        selectedDriver?.userId?._id ||
+        selectedDriver?._id;
+
+        setRatingDriverId(driverId);
         setShowRating(true);
 
         setTimeout(() => {
@@ -657,7 +662,11 @@ export default function RiderDashboard() {
 
         // COMPLETED
         if (ride.status === "completed") {
-          setRatingDriverId(activeDriver?.userId?._id);
+          const driverId =
+          ride.driverId?.userId?._id ||
+          ride.driverId?._id;
+
+          setRatingDriverId(driverId);
           setTimeout(() => {
             resetRide();
           }, 7000);
