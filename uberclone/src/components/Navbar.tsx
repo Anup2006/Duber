@@ -248,27 +248,42 @@ function Navbar() {
               "
             >
               {/* HEADER */}
-              <div className="flex items-center justify-between px-5 py-5 border-b border-white/10">
-                <div>
-                  <h2 className="text-lg font-semibold text-white">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-black/40 backdrop-blur-md">
+                <div className="space-y-1">
+                  <h2 className="text-lg font-semibold text-white tracking-wide">
                     Driver Menu
                   </h2>
+
                   <p className="text-xs text-white/40">
-                    Quick navigation
+                    Quick navigation & controls
                   </p>
+
+                  <div className="flex items-center gap-3 mt-3 px-3 py-2 rounded-xl bg-white/10 border border-white/10 hover:bg-white/15 transition">
+
+                    <div className="h-9 w-9 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-sm font-semibold text-white shadow-md">
+                      {user?.name?.charAt(0).toUpperCase() || "U"}
+                    </div>
+
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-sm font-medium text-white truncate max-w-[160px]">
+                        {user?.name || "Unknown User"}
+                      </span>
+
+                      <span className="text-[11px] text-white/40 truncate max-w-[160px]">
+                        {user?.email}
+                      </span>
+                    </div>
+
+                  </div>
                 </div>
 
                 <button
                   onClick={() => setOpen(false)}
-                  className="
-                    h-10 w-10 rounded-full
-                    bg-white/10 hover:bg-white/20
-                    flex items-center justify-center
-                    transition
-                  "
+                  className="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center transition"
                 >
                   <X className="h-5 w-5 text-white" />
                 </button>
+
               </div>
 
               {/* NAV LINKS */}

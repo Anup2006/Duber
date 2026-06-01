@@ -10,21 +10,14 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     const { rideId, driverId, riderId, rating, comment } = body;
-
-    console.log({
-  rideId,
-  driverId,
-  riderId,
-  rating,
-});
     
     if (!rideId || !driverId || !riderId || !rating) {
       console.log("MISSING FIELD", {
-    rideId,
-    driverId,
-    riderId,
-    rating,
-  });
+        rideId,
+        driverId,
+        riderId,
+        rating,
+      });
       return NextResponse.json(
         { error: "Missing fields" },
         { status: 400 }

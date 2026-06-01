@@ -122,11 +122,38 @@ export default function RiderDashboard() {
     return distance / 1000; // km
   };
 
-  const calculateFare = (km: number) => {
-    const BASE_FARE = 30;
-    const PER_KM = 20;
+  const getWeatherScore = () => {
+    const month = new Date().getMonth();
 
-    return Math.round(BASE_FARE + km * PER_KM);
+    if (month >= 5 && month <= 8) return 3;
+    if (month >= 10 || month <= 1) return 2;
+    return 1;
+  };
+
+  const getTrafficScore = () => {
+    const hour = new Date().getHours();
+
+    if ((hour >= 8 && hour <= 11) || (hour >= 17 && hour <= 20)) return 3;
+    if (hour >= 12 && hour <= 16) return 2;
+    return 1;
+  };
+
+  const getFareFromModel = async (distanceKm: number, durationMin: number) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_FARE_API}/predict-fare`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        distanceKm,
+        durationMin,
+        hour: new Date().getHours(),
+        dayOfWeek: new Date().getDay(),
+        weatherScore: getWeatherScore(),
+        trafficScore: getTrafficScore(),
+      }),
+    });
+
+    const data = await res.json();
+    return data.fare;
   };
 
   const calculateETA = (
@@ -134,7 +161,7 @@ export default function RiderDashboard() {
   ) => {
 
     if (route.length < 2) {
-      return null;
+      return 0;
     }
 
     let totalMeters = 0;
@@ -242,10 +269,10 @@ export default function RiderDashboard() {
 
       setRoute(formattedRoute);
 
-      // DISTANCE + FARE
       const distanceKm = calculateTotalDistance(formattedRoute);
+      const durationMin = calculateETA(formattedRoute);
+      const calculatedFare = await getFareFromModel(distanceKm,durationMin);
 
-      const calculatedFare = calculateFare(distanceKm);
 
       setDistance(distanceKm);
       setFare(calculatedFare);
@@ -803,19 +830,6 @@ export default function RiderDashboard() {
     {/* NAVBAR */}
     <div className="absolute top-0 left-0 right-0 z-40">
       <Navbar />
-    </div>
-
-    {/* FLOATING ACTIONS */}
-    <div className="absolute right-4 top-24 z-40 flex flex-col gap-3">
-
-      <button className="h-12 w-12 rounded-full bg-white shadow-xl flex items-center justify-center">
-        <Navigation className="h-5 w-5" />
-      </button>
-
-      <button className="h-12 w-12 rounded-full bg-red-500 text-white shadow-xl flex items-center justify-center">
-        <Shield className="h-5 w-5" />
-      </button>
-
     </div>
 
     {/* BOTTOM SHEET */}

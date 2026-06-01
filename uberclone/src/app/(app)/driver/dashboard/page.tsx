@@ -608,19 +608,6 @@ export default function DriverDashboard() {
       <Navbar />
     </div>
 
-    {/* FLOATING ACTIONS */}
-    <div className="absolute right-4 top-24 z-40 flex flex-col gap-3">
-
-      <button className="h-12 w-12 rounded-full bg-white shadow-xl flex items-center justify-center">
-        <Navigation className="h-5 w-5" />
-      </button>
-
-      <button className="h-12 w-12 rounded-full bg-red-500 text-white shadow-xl flex items-center justify-center">
-        <Shield className="h-5 w-5" />
-      </button>
-
-    </div>
-
     {/* BOTTOM SHEET */}
     <motion.div
       style={{ height: sheetHeight }}
@@ -635,7 +622,10 @@ export default function DriverDashboard() {
           } else {
             setSheetHeight(SHEET_EXPANDED);
           }
-        } else if (dragDistance > 80) {
+        }
+
+        // dragging DOWN (positive)
+        else if (dragDistance > 80) {
           if (sheetHeight === SHEET_EXPANDED) {
             setSheetHeight(SHEET_MID);
           } else {
@@ -659,16 +649,26 @@ export default function DriverDashboard() {
         backdrop-blur-xl
         shadow-2xl
         border-t
-        overflow-y-auto
+        flex
+        flex-col
       "
     >
-
-      {/* HANDLE */}
-      <div className="flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing">
-        <div className="h-1.5 w-14 rounded-full bg-gray-300" />
+      <div
+        className="flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing"
+      >
+        <div className="h-1.5 w-14 rounded-full bg-gray-300" ></div>
       </div>
 
-      <div className="p-5 md:p-6 space-y-5">
+      <div
+        className="
+          flex-1
+          overflow-y-auto
+          overscroll-contain
+          p-5 md:p-6
+          space-y-5
+        "
+        >
+        <div className="p-5 md:p-6 space-y-5">
 
         {/* HEADER */}
         <div className="flex items-center justify-between">
@@ -876,7 +876,7 @@ export default function DriverDashboard() {
           ))}
 
         </div>
-
+      </div>    
       </div>
     </motion.div>
 

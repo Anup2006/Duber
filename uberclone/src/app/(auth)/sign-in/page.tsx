@@ -82,7 +82,7 @@ const Page = () => {
       <Card className="w-full max-w-md shadow-xl rounded-2xl">
         <CardHeader className="space-y-2">
           <h1 className="text-4xl font-extrabold text-center text-black font-serif tracking-tight">
-            Welcome to Uber
+            Welcome to RideX
           </h1>
           <CardTitle className="text-center text-lg">Sign In</CardTitle>
         </CardHeader>
