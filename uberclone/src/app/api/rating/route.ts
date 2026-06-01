@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import RatingModel from "@/model/Rating";
 import DriverModel from "@/model/driver";
-import RideModel from "@/model/Ride";
 
 export async function POST(req: Request) {
   await dbConnect();
@@ -11,9 +10,6 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     const { rideId, driverId, riderId, rating, comment } = body;
-
-    const ride = await RideModel.findById(rideId);
-    const driverId1 = ride?.driverId;
 
     console.log({
   rideId,
@@ -56,9 +52,7 @@ export async function POST(req: Request) {
     });
 
     // 3. update driver stats
-    const driver = await DriverModel.findOne({
-        userId: driverId,
-    });
+    const driver = await DriverModel.findById(driverId);
 
     if (!driver) {
       return NextResponse.json(
