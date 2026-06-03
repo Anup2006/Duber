@@ -117,106 +117,90 @@ export default function DriverSetupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-        <Navbar/>
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen bg-gray-100 px-4 py-6">
 
-        <CardContent className="p-6 space-y-4">
+      <div className="absolute top-0 left-0 right-0 z-40">
+        <Navbar />
+      </div>
+    
 
-          <h1 className="text-2xl font-bold">
-            Driver Setup
-          </h1>
+      <div className="flex justify-center items-center mt-22">
+        <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl shadow-lg">
+          <CardContent className="p-4 sm:p-6 space-y-4">
+            <h1 className="text-xl sm:text-2xl font-bold text-center">
+              Driver Setup
+            </h1>
 
-          <Input
-            placeholder="Car Name"
-            value={form.carName}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                carName:
-                  e.target.value,
-              })
-            }
-          />
+            <Input
+              placeholder="Car Name"
+              value={form.carName}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  carName: e.target.value,
+                })
+              }
+            />
 
-          <Input
-            placeholder="Car Number"
-            value={form.carNumber}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                carNumber:
-                  e.target.value,
-              })
-            }
-          />
+            <Input
+              placeholder="Car Number"
+              value={form.carNumber}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  carNumber: e.target.value,
+                })
+              }
+            />
 
-          <Input
-            placeholder="Car Type"
-            value={form.carType}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                carType:
-                  e.target.value,
-              })
-            }
-          />
+            <Input
+              placeholder="Car Type"
+              value={form.carType}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  carType: e.target.value,
+                })
+              }
+            />
 
-          <Input
-            placeholder="License Number"
-            value={
-              form.licenseNumber
-            }
-            onChange={(e) =>
-              setForm({
-                ...form,
-                licenseNumber:
-                  e.target.value,
-              })
-            }
-          />
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={handleGetLocation}
+            <Input
+              placeholder="License Number"
+              value={form.licenseNumber}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  licenseNumber: e.target.value,
+                })
+              }
+            />
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={handleGetLocation}
             >
-                Use Current Location
+              Use Current Location
             </Button>
+
             {location && (
-                <div className="text-sm text-gray-500">
-
-                    Lat:
-                    {" "}
-                    {location.lat}
-
-                    <br />
-
-                    Lng:
-                    {" "}
-                    {location.lng}
-
-                </div>
-
+              <div className="text-sm text-gray-500 break-words">
+                <p>Lat: {location.lat}</p>
+                <p>Lng: {location.lng}</p>
+              </div>
             )}
 
-          <Button
-            className="w-full"
-            onClick={
-              handleSubmit
-            }
-            disabled={loading}
-          >
-            {loading
-              ? "Saving..."
-              : "Complete Setup"}
-          </Button>
-
-        </CardContent>
-
-      </Card>
-
+            <Button
+              className="w-full"
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? "Saving..." : "Complete Setup"}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

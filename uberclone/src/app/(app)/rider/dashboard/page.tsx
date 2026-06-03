@@ -1321,7 +1321,7 @@ export default function RiderDashboard() {
 
 
       {/* ACTIVE DRIVER */}
-      {rideStatus==="accepted" && rideId && activeDriver && (
+      {(rideStatus === "accepted" || rideStatus === "arriving") && rideId && activeDriver && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
